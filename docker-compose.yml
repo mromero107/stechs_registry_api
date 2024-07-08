@@ -1,0 +1,50 @@
+
+services:
+  api:
+    image: stechs_registry_api:1.0.0
+    container_name: stechs_registry_api
+    restart: "no"
+    build:
+      context: .
+    environment:
+      PORT: 8000
+    env_file:
+      - .env
+    ports:
+      - '8000:8000'
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - default
+    
+  db:
+    image: "postgres:15-alpine"
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./scripts/create_test_db.sh:/docker-entrypoint-initdb.d/create_test_db.sh
+    environment:
+      - POSTGRES_DB=db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+    networks:
+      - default
+
+  pgweb:
+    container_name: pgweb
+    restart: always
+    image: sosedoff/pgweb
+    ports:
+      - "8081:8081"
+
+
+volumes:
+  db_data: {}

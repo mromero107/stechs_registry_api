@@ -1,0 +1,15 @@
+# Ignore files and directories commonly used in development
+.git/
+.vscode/
+
+# Ignore specific files
+.env
+.DS_Store
+
+# Ignore log files
+*.log
+
+# Ignore build artifacts
+dist/
+build/
+
