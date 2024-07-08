@@ -6,7 +6,7 @@ import sqlalchemy as sa
 from sqlalchemy import orm
 
 
-class StatusEnum(enum.Enum):
+class StatusEnum(str, enum.Enum):
     active = "active"
     suspended = "suspended"
     provision = "provision"
@@ -28,7 +28,6 @@ class CableModem(Base):
 
     model: orm.Mapped[str] = orm.mapped_column(sa.String, nullable=False)
     description: orm.Mapped[str] = orm.mapped_column(sa.String, nullable=True)
-    status: orm.Mapped[str] = orm.mapped_column(sa.String, nullable=True)
     status: orm.Mapped[StatusEnum] = orm.mapped_column(
         sa.Enum(StatusEnum, name="statusenum"), nullable=False
     )
